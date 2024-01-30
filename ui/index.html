@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Entries List</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 20px;
+      }
+
+      #entries-container {
+        max-width: 800px;
+        margin: 30px auto;
+      }
+
+      .entry {
+        background-color: #fff;
+        margin-bottom: 20px;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .entry h2 {
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+
+      .entry pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="entries-container">
+      <!-- Entries will be loaded here by JavaScript -->
+    </div>
+
+    <script>
+      function loadEntries() {
+        fetch("/api/entries") // Replace with the actual API endpoint to fetch entries
+          .then((response) => response.json())
+          .then((data) => {
+            const entries = data.data;
+            const container = document.getElementById("entries-container");
+            container.innerHTML = ""; // Clear the container
+
+            entries.forEach((entry) => {
+              const entryDiv = document.createElement("div");
+              entryDiv.className = "entry";
+              entryDiv.innerHTML = `
+          <h2>${entry.title}</h2>
+          <p><strong>Description:</strong> ${entry.description}</p>
+          <p><strong>Sender:</strong> ${entry.sender}</p>
+          <h3>Answer:</h3>
+          <pre>${entry.answer}</pre>
+          <h3>Document:</h3>
+          <pre>${entry.document}</pre>
+        `;
+              container.appendChild(entryDiv);
+            });
+          })
+          .catch((error) => {
+            console.error("Error fetching entries:", error);
+          });
+      }
+
+      // Load entries when the page loads
+      window.onload = loadEntries;
+    </script>
+  </body>
+</html>
