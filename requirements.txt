@@ -1,6 +1,17 @@
 uvicorn
-fastapi
+fastapi[all]
 pydantic
 openai
 langchain
+langchain_openai
+pypdf
+chromadb
 python-dotenv
+
+## PII
+spacy
+pydantic
+spacy_fastlang
+presidio-analyzer
+presidio-anonymizer
+faker
