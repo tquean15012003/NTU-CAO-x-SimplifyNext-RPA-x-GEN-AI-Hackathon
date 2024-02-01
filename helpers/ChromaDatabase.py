@@ -3,7 +3,7 @@ from langchain_openai import OpenAIEmbeddings
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.vectorstores.chroma import Chroma
 from langchain_community.document_loaders import PyPDFLoader
-
+from langchain_core.documents import Document
 import os
 
 class Metadata(TypedDict):
@@ -28,15 +28,15 @@ class ChromaDatabase:
         processed_documents = []
         for document in documents:
             document.metadata['source'] = document.metadata['source'].split("/")[-1].split(".")[0]
-            document.metadata['content'] = document.page_content
-            document.page_content = document.metadata['source']
+            # document.metadata['content'] = document.page_content
+            # document.page_content = document.metadata['source']
             processed_documents.append(document)
             
         text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
         chunked_documents = text_splitter.split_documents(processed_documents)
         self.dbstore = Chroma.from_documents(chunked_documents, OpenAIEmbeddings())
 
-    def query(self, query: str) -> list[CustomDocument]:
+    def query(self, query: str) -> list[Document]:
         # return self.chunked_documents
         docs = self.dbstore.similarity_search(query)
         return docs

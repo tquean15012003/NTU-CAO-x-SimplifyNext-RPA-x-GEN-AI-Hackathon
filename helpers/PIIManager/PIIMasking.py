@@ -89,7 +89,7 @@ class PIIMaskingManager:
         text = text.replace(".", ";")
         # Perform initial anonymization
         anonymized_text = self.__anonymize_text(text=text, lang_code=lang_code)
-        anonymized_text = text.replace(";", ".")
+        anonymized_text = anonymized_text.replace(";", ".")
 
         logger.info(f"Got anonymized text - {anonymized_text}")
         logger.info(f"Got deanonymized mapping - {self.deanonymizer_mapping}")

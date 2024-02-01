@@ -20,9 +20,16 @@ async def create_entry(email_details: CreateEntry):
     email_details_dict = email_details.model_dump()
     logger.info(f"Create entry called\n{email_details_dict}")
     answer, document = get_response_from_ai(email_details=email_details)
-    email_details_dict.update({"answer": answer, "document": document.dict()})
+    document_dict = document.dict()
+    email_details_dict.update(
+        {
+            "answer": answer,
+            "document": document_dict["page_content"],
+            "document_title": document_dict["metadata"]["source"],
+        }
+    )
     store_manager.emails.append(email_details_dict)
-    return {"status": "success"}
+    return email_details_dict
 
 
 def get_response_from_ai(email_details: CreateEntry) -> tuple[str, Document]:
@@ -30,9 +37,11 @@ def get_response_from_ai(email_details: CreateEntry) -> tuple[str, Document]:
     first_relevant_document = relevant_documents[0]
     logger.info(f"All relevant documents\n{first_relevant_document}")
 
-    system_message = SYSTEM_MESSAGE_PREFIX + first_relevant_document.metadata["content"]
+    system_message = SYSTEM_MESSAGE_PREFIX + first_relevant_document.page_content
     pii_manager = PIIMaskingManager()
-    question, deanonymizer_mapping = pii_manager.get_anonymized_text(email_details.description)
+    question, deanonymizer_mapping = pii_manager.get_anonymized_text(
+        email_details.description
+    )
     logger.info(f"Question used: {question}")
     response = client.chat.completions.create(
         messages=[
