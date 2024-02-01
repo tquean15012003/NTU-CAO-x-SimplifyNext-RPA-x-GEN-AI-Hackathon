@@ -85,13 +85,14 @@ class PIIMaskingManager:
             message = "Language {lang_code} is not supported."
             logger.error(message)
             raise ValueError(message)
-
+        
+        text = text.replace(".", ";")
         # Perform initial anonymization
         anonymized_text = self.__anonymize_text(text=text, lang_code=lang_code)
+        anonymized_text = text.replace(";", ".")
 
         logger.info(f"Got anonymized text - {anonymized_text}")
         logger.info(f"Got deanonymized mapping - {self.deanonymizer_mapping}")
-
         return anonymized_text, dict(self.deanonymizer_mapping)
 
     def get_deanonymized_text(
