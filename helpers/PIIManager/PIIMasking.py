@@ -128,7 +128,7 @@ class PIIMaskingManager:
 
     def __anonymize_text(
         self, text: str, lang_code: str
-    ) -> tuple[str, MappingDataType]:
+    ) -> str:
         # Analyze text
         analyzer_results = self.__analyze_text(text=text, lang_code=lang_code)
 

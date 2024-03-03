@@ -5,7 +5,7 @@ SYSTEM_MESSAGE_PREFIX = (
 )
 
 MODEL = "gpt-3.5-turbo"
-# MODEL = "gpt-4"
+MODEL = "gpt-4"
 
 class CreateEntry(BaseModel):
     title: str
